@@ -1,0 +1,37 @@
+{
+  "kind": "collectionType",
+  "collectionName": "book_contents",
+  "info": {
+    "singularName": "book-content",
+    "pluralName": "book-contents",
+    "displayName": "book-content",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "book": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::book.book",
+      "inversedBy": "book_content"
+    },
+    "content": {
+      "type": "media",
+      "multiple": true,
+      "required": false,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
+    },
+    "bookcontent": {
+      "type": "uid",
+      "required": true
+    }
+  }
+}

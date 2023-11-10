@@ -1,6 +1,7 @@
 import 'package:ebook_frontend/components/my_button.dart';
 import 'package:ebook_frontend/components/my_textfield.dart';
 import 'package:ebook_frontend/components/square_tile.dart';
+import 'package:ebook_frontend/constants/colorconstants.dart';
 import 'package:ebook_frontend/scripts/login.dart';
 import 'package:flutter/material.dart';
 
@@ -33,6 +34,7 @@ class _LoginPageState extends State<LoginPage> {
                   Icon(
                     Icons.library_books,
                     size: 100,
+                    color: buttonMainColor,
                   ),
 
                   SizedBox(height: 50),

@@ -1,8 +1,11 @@
+import 'package:ebook_frontend/constants/colorconstants.dart';
 import 'package:flutter/material.dart';
 
 class MyButton extends StatelessWidget {
   final Function()? onTap;
   final String text;
+
+
 
   const MyButton({super.key, required this.onTap, required this.text});
 
@@ -13,7 +16,7 @@ class MyButton extends StatelessWidget {
       child: Container(
         padding: EdgeInsets.all(25),
         margin: EdgeInsets.symmetric(horizontal: 25),
-        decoration: BoxDecoration(color: Colors.black,
+        decoration: BoxDecoration(color: buttonMainColor,
         borderRadius: BorderRadius.circular(8)),
         child: Center(
             child: Text(

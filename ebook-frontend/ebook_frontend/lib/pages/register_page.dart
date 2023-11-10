@@ -1,6 +1,7 @@
 import 'package:ebook_frontend/components/my_button.dart';
 import 'package:ebook_frontend/components/my_textfield.dart';
 import 'package:ebook_frontend/components/square_tile.dart';
+import 'package:ebook_frontend/constants/colorconstants.dart';
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -113,6 +114,7 @@ void signUserUpApi(email, password) async {
                   Icon(
                     Icons.library_books,
                     size: 100,
+                    color: buttonMainColor
                   ),
 
                   SizedBox(height: 50),

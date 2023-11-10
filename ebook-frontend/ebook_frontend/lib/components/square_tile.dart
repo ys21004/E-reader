@@ -1,4 +1,4 @@
-import 'package:ebook_frontend/constants/constants.dart';
+import 'package:ebook_frontend/constants/colorconstants.dart';
 import 'package:flutter/material.dart';
 
 class SquareTile extends StatelessWidget {
