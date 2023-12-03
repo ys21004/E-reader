@@ -16,6 +16,8 @@
     "@strapi/plugin-users-permissions": "4.14.5",
     "@strapi/strapi": "4.14.5",
     "pg": "8.8.0",
+    "strapi-advanced-uuid": "^1.1.4",
+    "strapi-auto-uuid": "^0.0.8",
     "strapi-plugin-transformer": "^3.1.2"
   },
   "author": {

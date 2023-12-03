@@ -1,9 +1,14 @@
 'use strict';
 
-/**
- * book-content router
- */
-
 const { createCoreRouter } = require('@strapi/strapi').factories;
 
-module.exports = createCoreRouter('api::book-content.book-content');
+module.exports = {
+
+    routes: [
+        {
+            method: 'GET',
+            path: '/book-contents/:bookUUID',
+            handler: 'api::book-content.book-content.findContentByBookUUID',
+        },
+    ],
+}

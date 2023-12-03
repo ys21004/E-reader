@@ -1,0 +1,31 @@
+{
+  "kind": "collectionType",
+  "collectionName": "user_book_progresses",
+  "info": {
+    "singularName": "user-book-progress",
+    "pluralName": "user-book-progresses",
+    "displayName": "User-book-progress"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "books": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::book.book",
+      "inversedBy": "user_book_progresses"
+    },
+    "users_permissions_users": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "plugin::users-permissions.user",
+      "inversedBy": "user_book_progresses"
+    },
+    "page": {
+      "type": "integer",
+      "required": true
+    }
+  }
+}

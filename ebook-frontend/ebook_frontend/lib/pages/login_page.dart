@@ -4,6 +4,10 @@ import 'package:ebook_frontend/components/square_tile.dart';
 import 'package:ebook_frontend/constants/colorconstants.dart';
 import 'package:ebook_frontend/scripts/login.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+
 
 class LoginPage extends StatefulWidget {
   final Function()? onTap;
@@ -16,6 +20,57 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+
+  void loginUserApi(email, password) async {
+    try {
+      var response = await http.post(
+          Uri.parse('${dotenv.env['DB_URL']}/api/auth/local'),
+          headers: {
+            'Content-Type': 'application/json', // Set the content type to JSON
+            'Accept': 'application/json', // Specify that you expect JSON in the response
+          },
+          body: jsonEncode({"identifier": email,"password": password}));
+      print('The response is${response.body}');
+      showErrorMessage('Successful login');
+      if (response.body.contains('error')){
+        showErrorMessage('Invalid Credentialssss');
+
+      }
+    } catch (e) {
+      print('Failed to login: $e');
+    }
+    ;
+  }
+
+  void loginUser() {
+    final email = emailController.text;
+    final password = passwordController.text;
+
+    // Validate email, password, and confirm password
+
+      loginUserApi(email, password);
+  }
+
+  void showErrorMessage(String message) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Error'),
+          content: Text(message),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -71,7 +126,7 @@ class _LoginPageState extends State<LoginPage> {
                   SizedBox(height: 20),
 
                   //Sign In Button
-                  MyButton(text: 'Sign in',onTap: signUserIn),
+                  MyButton(text: 'Sign in',onTap: loginUser),
 
                   SizedBox(height: 30),
 

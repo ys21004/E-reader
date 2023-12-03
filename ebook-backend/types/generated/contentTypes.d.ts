@@ -374,7 +374,7 @@ export interface ApiBookBook extends Schema.CollectionType {
     draftAndPublish: true;
   };
   attributes: {
-    bookuid: Attribute.UID & Attribute.Required;
+    bookid: Attribute.UID & Attribute.Required;
     title: Attribute.String & Attribute.Required;
     author: Attribute.String;
     date_published: Attribute.Date;
@@ -391,6 +391,13 @@ export interface ApiBookBook extends Schema.CollectionType {
       'api::book-content.book-content'
     >;
     book_cover: Attribute.Media;
+    bookuuid: Attribute.UID &
+      Attribute.CustomField<'plugin::strapi-advanced-uuid.uuid'>;
+    user_book_progresses: Attribute.Relation<
+      'api::book.book',
+      'manyToMany',
+      'api::user-book-progress.user-book-progress'
+    >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
@@ -431,6 +438,47 @@ export interface ApiBookContentBookContent extends Schema.CollectionType {
       Attribute.Private;
     updatedBy: Attribute.Relation<
       'api::book-content.book-content',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
+export interface ApiUserBookProgressUserBookProgress
+  extends Schema.CollectionType {
+  collectionName: 'user_book_progresses';
+  info: {
+    singularName: 'user-book-progress';
+    pluralName: 'user-book-progresses';
+    displayName: 'User-book-progress';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    books: Attribute.Relation<
+      'api::user-book-progress.user-book-progress',
+      'manyToMany',
+      'api::book.book'
+    >;
+    users_permissions_users: Attribute.Relation<
+      'api::user-book-progress.user-book-progress',
+      'manyToMany',
+      'plugin::users-permissions.user'
+    >;
+    page: Attribute.Integer & Attribute.Required;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::user-book-progress.user-book-progress',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::user-book-progress.user-book-progress',
       'oneToOne',
       'admin::user'
     > &
@@ -741,6 +789,13 @@ export interface PluginUsersPermissionsUser extends Schema.CollectionType {
       'api::book.book'
     >;
     test: Attribute.String & Attribute.Required & Attribute.DefaultTo<'test'>;
+    useruuid: Attribute.UID &
+      Attribute.CustomField<'plugin::strapi-advanced-uuid.uuid'>;
+    user_book_progresses: Attribute.Relation<
+      'plugin::users-permissions.user',
+      'manyToMany',
+      'api::user-book-progress.user-book-progress'
+    >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<
@@ -770,6 +825,7 @@ declare module '@strapi/types' {
       'admin::transfer-token-permission': AdminTransferTokenPermission;
       'api::book.book': ApiBookBook;
       'api::book-content.book-content': ApiBookContentBookContent;
+      'api::user-book-progress.user-book-progress': ApiUserBookProgressUserBookProgress;
       'plugin::upload.file': PluginUploadFile;
       'plugin::upload.folder': PluginUploadFolder;
       'plugin::i18n.locale': PluginI18NLocale;

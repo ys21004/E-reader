@@ -12,7 +12,7 @@
   },
   "pluginOptions": {},
   "attributes": {
-    "bookuid": {
+    "bookid": {
       "type": "uid",
       "required": true
     },
@@ -51,6 +51,16 @@
       "allowedTypes": [
         "images"
       ]
+    },
+    "bookuuid": {
+      "type": "customField",
+      "customField": "plugin::strapi-advanced-uuid.uuid"
+    },
+    "user_book_progresses": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::user-book-progress.user-book-progress",
+      "mappedBy": "books"
     }
   }
 }
