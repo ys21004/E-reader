@@ -107,6 +107,8 @@ class _HomePageState extends State<HomePage> {
                                   cardwidth: mybookcardwidth,
                                   title: userLibraryData[index]['title'],
                                   imageUrl: userLibraryData[index]['imageurl'],
+                                  bookuuid: userLibraryData[index]['bookuuid'],
+                                  price: userLibraryData[index]['price']
                                 ),
                               );
                             },
@@ -178,6 +180,8 @@ class _HomePageState extends State<HomePage> {
                             cardwidth: 100,
                             title: book['title'],
                             imageUrl: book['imageurl'],
+                            bookuuid: book['bookuuid'],
+                            price: book['price']
                           ),
                         );
                       },

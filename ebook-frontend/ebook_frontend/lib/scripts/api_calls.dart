@@ -8,13 +8,14 @@ import 'package:http/http.dart';
 
 import '../constants/defaults.dart';
 
+
 Future<dynamic> userLibrary() async {
   List myLibrary = [];
   Response response;
   SecureStorage userLibraryApiStorage = SecureStorage();
   var responseJSON;
-
   var jwtToken = await userLibraryApiStorage.readSecureData('jwt');
+  // print(jwtToken);
   try {
     response = await http.get(
       Uri.parse(
@@ -34,7 +35,7 @@ Future<dynamic> userLibrary() async {
         return null;
       }
       myLibrary = List.from(responseJSON['books'].map((book) {
-              print('${dotenv.env['DB_URL']}${book['book_cover']['formats']['thumbnail']['url']}');
+              print('The price is ${dotenv.env['DB_URL']}${book['price']}');
 
         return {
           'id': book['id'],
@@ -44,6 +45,8 @@ Future<dynamic> userLibrary() async {
               '${dotenv.env['DB_URL']}${book['book_cover']['formats']['thumbnail']['url']}',
           'date_published': book['date_published'],
           'description': book['description'],
+          'bookuuid': book['bookuuid'],
+          'price': book['price'].toDouble()
         };
       }).toList());
 
@@ -59,6 +62,35 @@ Future<dynamic> userLibrary() async {
   }
 }
 
+Future<dynamic> retrieveBookPDF(bookUUID) async {
+  Response response;
+  SecureStorage userLibraryApiStorage = SecureStorage();
+  var responseJSON;
+
+  var jwtToken = await userLibraryApiStorage.readSecureData('jwt');
+
+  try {
+    response = await http.get(
+      Uri.parse(
+          '${dotenv.env['DB_URL']}/api/book-contents/${bookUUID}'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $jwtToken',
+      },
+    );
+    if (response.statusCode == 200) {
+      responseJSON = json.decode(response.body);
+      print(responseJSON[0]['content'][0]['url']);
+      var pdfURL = '${dotenv.env['DB_URL']}${responseJSON[0]['content'][0]['url']}';
+      return pdfURL;
+    }
+  }catch (e) {
+    print('Failed to retrieve book content: $e');
+  }
+}
+
+// load newest
 Future<List<dynamic>> loadNewest([int page_number = 1]) async {
   List newestLibrary = [];
   Response response;
@@ -84,8 +116,8 @@ Future<List<dynamic>> loadNewest([int page_number = 1]) async {
       responseJSON = json.decode(response.body);
       // print('This is the newest library${responseJSON['data']}');
       newestLibrary = List.from(responseJSON['data'].map((book) {
-        print(
-            '${dotenv.env['DB_URL']}${book['attributes']['book_cover']['data']['attributes']['formats']['thumbnail']['url']}');
+        // print(
+        //     '${dotenv.env['DB_URL']}${book['attributes']['book_cover']['data']['attributes']['formats']['thumbnail']['url']}');
         return {
           'id': book['id'],
           'title': book['attributes']['title'],
@@ -93,13 +125,16 @@ Future<List<dynamic>> loadNewest([int page_number = 1]) async {
           'imageurl':
               '${dotenv.env['DB_URL']}${book['attributes']['book_cover']['data']['attributes']['formats']['thumbnail']['url']}',
           'date_published': book['attributes']['date_published'],
-          'description': book['attributes']['description']
+          'description': book['attributes']['description'],
+          'bookuuid': book['attributes']['bookuuid'],
+          'price': book['attributes']['price'].toDouble()
+
         };
       }).toList());
 
       print('Success, the newest Library function worked correctly');
     } else {
-      print('Failed to retrieve books. Status code: ${response.statusCode}');
+      print('Failed to retrieve newest books. Status code: ${response.statusCode}');
     }
     return newestLibrary;
   } catch (e) {
@@ -138,8 +173,10 @@ Future<List<dynamic>> loadBestSellers([int page_number = 1]) async {
           'id': book['id'],
           'title': book['attributes']['title'],
           'author': book['attributes']['author'],
-          'imageurl': book['attributes']['imageurl'],
+          'imageurl': '${dotenv.env['DB_URL']}${book['attributes']['book_cover']['data']['attributes']['formats']['thumbnail']['url']}',
           'date_published': book['attributes']['date_published'],
+          'bookuuid': book['attributes']['bookuuid'],
+          'price': book['attributes']['price'].toDouble()
         };
       }).toList());
 
@@ -185,8 +222,10 @@ Future<List<dynamic>> loadTopRated([int page_number = 1]) async {
           'id': book['id'],
           'title': book['attributes']['title'],
           'author': book['attributes']['author'],
-          'imageurl': book['attributes']['imageurl'],
+          'imageurl':'${dotenv.env['DB_URL']}${book['attributes']['book_cover']['data']['attributes']['formats']['thumbnail']['url']}',
           'date_published': book['attributes']['date_published'],
+          'bookuuid': book['attributes']['bookuuid'],
+          'price': book['attributes']['price'].toDouble()
         };
       }).toList());
 

@@ -1,8 +1,12 @@
 import 'package:ebook_frontend/components/my_button.dart';
 import 'package:ebook_frontend/constants/defaults.dart';
+import 'package:ebook_frontend/pages/book_pdf.dart';
+import 'package:ebook_frontend/pages/purchase_page.dart';
 import 'package:flutter/material.dart';
 import '../constants/colorconstants.dart';
 import '../scripts/check_if_user_purchased.dart';
+import 'package:flutter_pdfview/flutter_pdfview.dart';
+import '../scripts/api_calls.dart';
 
 class BookDetailsPage extends StatefulWidget {
   final Map<String, dynamic> book;
@@ -21,6 +25,7 @@ class _BookDetailsPageState extends State<BookDetailsPage> {
     super.initState();
     _checkPurchaseStatus();
   }
+  
 
   Future<void> _checkPurchaseStatus() async {
     // Simulate an API call to check purchase status
@@ -79,14 +84,26 @@ class _BookDetailsPageState extends State<BookDetailsPage> {
                           TextStyle(fontSize: 18, fontStyle: FontStyle.italic)),
                 ),
               ],
+              if (widget.book['price'] != null) ...[
+                SizedBox(height: 8),
+                Text(
+                  '\$ ${widget.book['price']}',
+                  style: defaultfont(
+                      textStyle:
+                      TextStyle(fontSize: 21, fontWeight: FontWeight.bold, color: priceColor)),
+                ),
+              ],
               SizedBox(height: defaultspacing),
               MyButton(
                 onTap: () {
                   if (_hasPurchased) {
-                    // Navigate to the reading screen
-                  } else {
-                    // Initiate the purchase flow
+                    Navigator.push(context, MaterialPageRoute(
+                        builder: (context) => PDFViewerPage(bookUUID: widget.book['bookuuid'],bookTitle: widget.book['title'],)));
                   }
+                    else {
+                        // Initiate the purchase flow
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => PurchasePage(bookUUID: widget.book['bookuuid'],bookPrice: widget.book['price'])));
+                        }
                 },
                 text: (_hasPurchased ? 'Read' : 'Purchase'),
               ),

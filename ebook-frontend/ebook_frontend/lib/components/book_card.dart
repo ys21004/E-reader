@@ -14,13 +14,17 @@ class BookCard extends StatelessWidget {
   final double cardwidth;
   final double cardheight;
   final double textsize;
-  
+  final String bookuuid;
+  final double price;
+
   BookCard({
     required this.cardheight,
     required this.cardwidth,
     required this.imageUrl,
     required this.title,
     required this.textsize,
+    required this.bookuuid,
+    required this.price,
     this.author,
     this.rating,
   });

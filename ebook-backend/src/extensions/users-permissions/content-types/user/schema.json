@@ -85,6 +85,12 @@
       "relation": "manyToMany",
       "target": "api::user-book-progress.user-book-progress",
       "mappedBy": "users_permissions_users"
+    },
+    "purchases": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::user-book-purchase.user-book-purchase",
+      "mappedBy": "user"
     }
   }
 }

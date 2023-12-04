@@ -1,0 +1,32 @@
+{
+  "kind": "collectionType",
+  "collectionName": "user_book_purchases",
+  "info": {
+    "singularName": "user-book-purchase",
+    "pluralName": "user-book-purchases",
+    "displayName": "purchase",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "book": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::book.book",
+      "inversedBy": "purchases"
+    },
+    "user": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user",
+      "inversedBy": "purchases"
+    },
+    "price_purchased_for": {
+      "type": "float",
+      "required": true
+    }
+  }
+}

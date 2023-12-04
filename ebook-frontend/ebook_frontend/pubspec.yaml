@@ -39,6 +39,9 @@ dependencies:
   http: ^1.1.0
   flutter_secure_storage: ^9.0.0
   google_fonts: ^6.1.0
+  flutter_pdfview: ^1.2.7
+  path_provider: ^2.0.7
+  flutter_credit_card: ^2.0.0
 
 dev_dependencies:
   flutter_test:

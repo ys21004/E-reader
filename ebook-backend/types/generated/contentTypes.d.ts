@@ -362,130 +362,6 @@ export interface AdminTransferTokenPermission extends Schema.CollectionType {
   };
 }
 
-export interface ApiBookBook extends Schema.CollectionType {
-  collectionName: 'books';
-  info: {
-    singularName: 'book';
-    pluralName: 'books';
-    displayName: 'Book';
-    description: '';
-  };
-  options: {
-    draftAndPublish: true;
-  };
-  attributes: {
-    bookid: Attribute.UID & Attribute.Required;
-    title: Attribute.String & Attribute.Required;
-    author: Attribute.String;
-    date_published: Attribute.Date;
-    date_added: Attribute.DateTime;
-    description: Attribute.Text;
-    users: Attribute.Relation<
-      'api::book.book',
-      'manyToMany',
-      'plugin::users-permissions.user'
-    >;
-    book_content: Attribute.Relation<
-      'api::book.book',
-      'oneToOne',
-      'api::book-content.book-content'
-    >;
-    book_cover: Attribute.Media;
-    bookuuid: Attribute.UID &
-      Attribute.CustomField<'plugin::strapi-advanced-uuid.uuid'>;
-    user_book_progresses: Attribute.Relation<
-      'api::book.book',
-      'manyToMany',
-      'api::user-book-progress.user-book-progress'
-    >;
-    createdAt: Attribute.DateTime;
-    updatedAt: Attribute.DateTime;
-    publishedAt: Attribute.DateTime;
-    createdBy: Attribute.Relation<'api::book.book', 'oneToOne', 'admin::user'> &
-      Attribute.Private;
-    updatedBy: Attribute.Relation<'api::book.book', 'oneToOne', 'admin::user'> &
-      Attribute.Private;
-  };
-}
-
-export interface ApiBookContentBookContent extends Schema.CollectionType {
-  collectionName: 'book_contents';
-  info: {
-    singularName: 'book-content';
-    pluralName: 'book-contents';
-    displayName: 'book-content';
-    description: '';
-  };
-  options: {
-    draftAndPublish: true;
-  };
-  attributes: {
-    book: Attribute.Relation<
-      'api::book-content.book-content',
-      'oneToOne',
-      'api::book.book'
-    >;
-    content: Attribute.Media;
-    bookcontent: Attribute.UID & Attribute.Required;
-    createdAt: Attribute.DateTime;
-    updatedAt: Attribute.DateTime;
-    publishedAt: Attribute.DateTime;
-    createdBy: Attribute.Relation<
-      'api::book-content.book-content',
-      'oneToOne',
-      'admin::user'
-    > &
-      Attribute.Private;
-    updatedBy: Attribute.Relation<
-      'api::book-content.book-content',
-      'oneToOne',
-      'admin::user'
-    > &
-      Attribute.Private;
-  };
-}
-
-export interface ApiUserBookProgressUserBookProgress
-  extends Schema.CollectionType {
-  collectionName: 'user_book_progresses';
-  info: {
-    singularName: 'user-book-progress';
-    pluralName: 'user-book-progresses';
-    displayName: 'User-book-progress';
-  };
-  options: {
-    draftAndPublish: true;
-  };
-  attributes: {
-    books: Attribute.Relation<
-      'api::user-book-progress.user-book-progress',
-      'manyToMany',
-      'api::book.book'
-    >;
-    users_permissions_users: Attribute.Relation<
-      'api::user-book-progress.user-book-progress',
-      'manyToMany',
-      'plugin::users-permissions.user'
-    >;
-    page: Attribute.Integer & Attribute.Required;
-    createdAt: Attribute.DateTime;
-    updatedAt: Attribute.DateTime;
-    publishedAt: Attribute.DateTime;
-    createdBy: Attribute.Relation<
-      'api::user-book-progress.user-book-progress',
-      'oneToOne',
-      'admin::user'
-    > &
-      Attribute.Private;
-    updatedBy: Attribute.Relation<
-      'api::user-book-progress.user-book-progress',
-      'oneToOne',
-      'admin::user'
-    > &
-      Attribute.Private;
-  };
-}
-
 export interface PluginUploadFile extends Schema.CollectionType {
   collectionName: 'files';
   info: {
@@ -796,6 +672,11 @@ export interface PluginUsersPermissionsUser extends Schema.CollectionType {
       'manyToMany',
       'api::user-book-progress.user-book-progress'
     >;
+    purchases: Attribute.Relation<
+      'plugin::users-permissions.user',
+      'oneToMany',
+      'api::user-book-purchase.user-book-purchase'
+    >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<
@@ -813,6 +694,178 @@ export interface PluginUsersPermissionsUser extends Schema.CollectionType {
   };
 }
 
+export interface ApiBookBook extends Schema.CollectionType {
+  collectionName: 'books';
+  info: {
+    singularName: 'book';
+    pluralName: 'books';
+    displayName: 'Book';
+    description: '';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    bookid: Attribute.UID & Attribute.Required;
+    title: Attribute.String & Attribute.Required;
+    author: Attribute.String;
+    date_published: Attribute.Date;
+    date_added: Attribute.DateTime;
+    description: Attribute.Text;
+    users: Attribute.Relation<
+      'api::book.book',
+      'manyToMany',
+      'plugin::users-permissions.user'
+    >;
+    book_content: Attribute.Relation<
+      'api::book.book',
+      'oneToOne',
+      'api::book-content.book-content'
+    >;
+    book_cover: Attribute.Media;
+    bookuuid: Attribute.UID &
+      Attribute.CustomField<'plugin::strapi-advanced-uuid.uuid'>;
+    user_book_progresses: Attribute.Relation<
+      'api::book.book',
+      'manyToMany',
+      'api::user-book-progress.user-book-progress'
+    >;
+    price: Attribute.Float & Attribute.Required & Attribute.DefaultTo<10>;
+    purchases: Attribute.Relation<
+      'api::book.book',
+      'oneToMany',
+      'api::user-book-purchase.user-book-purchase'
+    >;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<'api::book.book', 'oneToOne', 'admin::user'> &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<'api::book.book', 'oneToOne', 'admin::user'> &
+      Attribute.Private;
+  };
+}
+
+export interface ApiBookContentBookContent extends Schema.CollectionType {
+  collectionName: 'book_contents';
+  info: {
+    singularName: 'book-content';
+    pluralName: 'book-contents';
+    displayName: 'book-content';
+    description: '';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    book: Attribute.Relation<
+      'api::book-content.book-content',
+      'oneToOne',
+      'api::book.book'
+    >;
+    content: Attribute.Media;
+    bookcontent: Attribute.UID & Attribute.Required;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::book-content.book-content',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::book-content.book-content',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
+export interface ApiUserBookProgressUserBookProgress
+  extends Schema.CollectionType {
+  collectionName: 'user_book_progresses';
+  info: {
+    singularName: 'user-book-progress';
+    pluralName: 'user-book-progresses';
+    displayName: 'User-book-progress';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    books: Attribute.Relation<
+      'api::user-book-progress.user-book-progress',
+      'manyToMany',
+      'api::book.book'
+    >;
+    users_permissions_users: Attribute.Relation<
+      'api::user-book-progress.user-book-progress',
+      'manyToMany',
+      'plugin::users-permissions.user'
+    >;
+    page: Attribute.Integer & Attribute.Required;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::user-book-progress.user-book-progress',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::user-book-progress.user-book-progress',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
+export interface ApiUserBookPurchaseUserBookPurchase
+  extends Schema.CollectionType {
+  collectionName: 'user_book_purchases';
+  info: {
+    singularName: 'user-book-purchase';
+    pluralName: 'user-book-purchases';
+    displayName: 'purchase';
+    description: '';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    book: Attribute.Relation<
+      'api::user-book-purchase.user-book-purchase',
+      'manyToOne',
+      'api::book.book'
+    >;
+    user: Attribute.Relation<
+      'api::user-book-purchase.user-book-purchase',
+      'manyToOne',
+      'plugin::users-permissions.user'
+    >;
+    price_purchased_for: Attribute.Float & Attribute.Required;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::user-book-purchase.user-book-purchase',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::user-book-purchase.user-book-purchase',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
 declare module '@strapi/types' {
   export module Shared {
     export interface ContentTypes {
@@ -823,15 +876,16 @@ declare module '@strapi/types' {
       'admin::api-token-permission': AdminApiTokenPermission;
       'admin::transfer-token': AdminTransferToken;
       'admin::transfer-token-permission': AdminTransferTokenPermission;
-      'api::book.book': ApiBookBook;
-      'api::book-content.book-content': ApiBookContentBookContent;
-      'api::user-book-progress.user-book-progress': ApiUserBookProgressUserBookProgress;
       'plugin::upload.file': PluginUploadFile;
       'plugin::upload.folder': PluginUploadFolder;
       'plugin::i18n.locale': PluginI18NLocale;
       'plugin::users-permissions.permission': PluginUsersPermissionsPermission;
       'plugin::users-permissions.role': PluginUsersPermissionsRole;
       'plugin::users-permissions.user': PluginUsersPermissionsUser;
+      'api::book.book': ApiBookBook;
+      'api::book-content.book-content': ApiBookContentBookContent;
+      'api::user-book-progress.user-book-progress': ApiUserBookProgressUserBookProgress;
+      'api::user-book-purchase.user-book-purchase': ApiUserBookPurchaseUserBookPurchase;
     }
   }
 }

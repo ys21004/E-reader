@@ -61,6 +61,17 @@
       "relation": "manyToMany",
       "target": "api::user-book-progress.user-book-progress",
       "mappedBy": "books"
+    },
+    "price": {
+      "type": "float",
+      "default": 10,
+      "required": true
+    },
+    "purchases": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::user-book-purchase.user-book-purchase",
+      "mappedBy": "book"
     }
   }
 }
