@@ -3,6 +3,7 @@ import 'package:ebook_frontend/components/my_textfield.dart';
 import 'package:ebook_frontend/components/square_tile.dart';
 import 'package:ebook_frontend/services/firebase_auth_methods.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
