@@ -69,7 +69,7 @@ class _LoginPageState extends State<LoginPage> {
                   SizedBox(height: 20),
 
                   //Sign In Button
-                  MyButton(text: 'Sign in',onTap: signUserIn),
+                  MyButton(text: 'Sign in', onTap: signUserIn),
 
                   SizedBox(height: 30),
 
@@ -126,5 +126,3 @@ class _LoginPageState extends State<LoginPage> {
         ));
   }
 }
-
-

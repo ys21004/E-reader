@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "185940337142",
+    "project_id": "fir-flutter-auth-33437",
+    "storage_bucket": "fir-flutter-auth-33437.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:185940337142:android:6ea6555e3418316ef527d7",
+        "android_client_info": {
+          "package_name": "com.example.ebook_frontend"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA5rLJCkNS8QDVQec3H23oxIccu9R65KI0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
