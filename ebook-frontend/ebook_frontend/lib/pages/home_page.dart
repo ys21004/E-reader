@@ -19,18 +19,49 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   late Future<dynamic> dynamicSectionFuture;
+  int currentPage = 1;
+  int totalPages = 1;
+  final ScrollController _scrollController = ScrollController();
+  late Function(int) currentFunction = loadNewest;
+
   SecureStorage userLibraryApiStorage = SecureStorage();
+
   @override
   void initState() {
     super.initState();
-    dynamicSectionFuture =
-        loadNewest(); // Set default future to load newest books
+    dynamicSectionFuture = currentFunction(currentPage);
+    _loadTotalPages();
   }
 
-  void updateDynamicSection(Future<dynamic> newFuture) {
+  Future<void> _loadTotalPages() async {
+    totalPages = await loadTotalPageNumber();
+  }
+
+  void updateDynamicSection(Function(int) newFunction, int page) {
+    double previousScrollPosition = _scrollController.offset;
     setState(() {
-      dynamicSectionFuture = newFuture;
+      currentPage = page;
+      currentFunction = newFunction;
+      dynamicSectionFuture = newFunction(page);
     });
+    _scrollController.jumpTo(previousScrollPosition);
+  }
+
+  Widget paginationWidget() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        IconButton(
+          icon: const Icon(Icons.arrow_back_ios),
+          onPressed: currentPage > 1 ? () => updateDynamicSection(currentFunction, currentPage - 1) : null,
+        ),
+        Text('Page $currentPage of $totalPages'),
+        IconButton(
+          icon: const Icon(Icons.arrow_forward_ios),
+          onPressed: currentPage < totalPages ? () => updateDynamicSection(currentFunction, currentPage + 1) : null,
+        ),
+      ],
+    );
   }
 
   @override
@@ -56,6 +87,7 @@ class _HomePageState extends State<HomePage> {
         ],
       ),
       body: SingleChildScrollView(
+        controller: _scrollController,
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 25),
           child: Column(
@@ -131,66 +163,72 @@ class _HomePageState extends State<HomePage> {
                 children: [
                   CategoryButton(
                     title: 'Newest',
-                    onPressed: () => updateDynamicSection(loadNewest()),
+                    onPressed: () => updateDynamicSection(loadNewest,1),
                   ),
                   CategoryButton(
                     title: 'Bestsellers',
-                    onPressed: () => updateDynamicSection(loadBestSellers()),
+                    onPressed: () => updateDynamicSection(loadBestSellers,1),
                   ),
                   CategoryButton(
                     title: 'Top Rated',
-                    onPressed: () => updateDynamicSection(loadTopRated()),
+                    onPressed: () => updateDynamicSection(loadTopRated,1),
                   ),
                 ],
               ),
               SizedBox(height: defaultspacing),
 
-              FutureBuilder<dynamic>(
-                future: dynamicSectionFuture,
-                builder: (BuildContext context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Center(child: CircularProgressIndicator());
-                  } else if (snapshot.hasError) {
-                    return Text('Error: ${snapshot.error}');
-                  } else if (snapshot.hasData) {
-                    var books = snapshot.data as List<dynamic>;
-                    return GridView.builder(
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 3,
-                        crossAxisSpacing: 5,
-                        mainAxisSpacing: 5,
-                        childAspectRatio: 0.65,
-                      ),
-                      shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
-                      itemCount: books.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        var book = books[index];
-                        return InkWell(
-                          onTap: () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => BookDetailsPage(
-                                      book: book,
-                                    )),
-                          ),
-                          child: BookCard(
-                            textsize: 12,
-                            cardheight: 120,
-                            cardwidth: 100,
-                            title: book['title'],
-                            imageUrl: book['imageurl'],
-                            bookuuid: book['bookuuid'],
-                            price: book['price']
-                          ),
-                        );
-                      },
-                    );
-                  } else {
-                    return Text('No data available');
-                  }
-                },
+              Container(
+                height: 370,
+                child: FutureBuilder<dynamic>(
+                  future: dynamicSectionFuture,
+                  builder: (BuildContext context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Center(child: CircularProgressIndicator());
+                    } else if (snapshot.hasError) {
+                      return Text('Error: ${snapshot.error}');
+                    } else if (snapshot.hasData) {
+                      var books = snapshot.data as List<dynamic>;
+                      return GridView.builder(
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 3,
+                          crossAxisSpacing: 5,
+                          mainAxisSpacing: 5,
+                          childAspectRatio: 0.65,
+                        ),
+                        shrinkWrap: true,
+                        physics: NeverScrollableScrollPhysics(),
+                        itemCount: books.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          var book = books[index];
+                          return InkWell(
+                            onTap: () => Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => BookDetailsPage(
+                                        book: book,
+                                      )),
+                            ),
+                            child: BookCard(
+                              textsize: 12,
+                              cardheight: 120,
+                              cardwidth: 100,
+                              title: book['title'],
+                              imageUrl: book['imageurl'],
+                              bookuuid: book['bookuuid'],
+                              price: book['price']
+                            ),
+                          );
+                        },
+                      );
+                    } else {
+                      return Text('No data available');
+                    }
+                  },
+                ),
               ),
+              paginationWidget(),
+              SizedBox(height: defaultspacing),
+
             ],
           ),
         ),

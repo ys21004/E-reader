@@ -104,7 +104,7 @@ Future<List<dynamic>> loadNewest([int page_number = 1]) async {
     //     '${dotenv.env['DB_URL']}/api/books?populate=*&pagination[page]=${page_number}&pagination[pageSize]=${numberofbookspersection}&sort[0]=date_added:desc');
     response = await http.get(
       Uri.parse(
-          '${dotenv.env['DB_URL']}/api/books?populate=*&pagination[page]=${page_number}&pagination[pageSize]=${numberofbookspersection}&sort[0]=date_added:desc'),
+          '${dotenv.env['DB_URL']}/api/books?populate=*&sort[0]=date_added:asc&pagination[page]=${page_number}&pagination[pageSize]=${numberofbookspersection}'),
       headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
@@ -157,7 +157,7 @@ Future<List<dynamic>> loadBestSellers([int page_number = 1]) async {
         '${dotenv.env['DB_URL']}/api/books?populate=*&pagination[page]=${page_number}&pagination[pageSize]=${numberofbookspersection}&sort[0]=date_added:desc');
     response = await http.get(
       Uri.parse(
-          '${dotenv.env['DB_URL']}/api/books?populate=*&pagination[page]=${page_number}&pagination[pageSize]=${numberofbookspersection}&sort[0]=date_added:asc'),
+          '${dotenv.env['DB_URL']}/api/books?populate=*&sort[0]=date_added:desc&pagination[page]=${page_number}&pagination[pageSize]=${numberofbookspersection}'),
       headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
@@ -180,7 +180,7 @@ Future<List<dynamic>> loadBestSellers([int page_number = 1]) async {
         };
       }).toList());
 
-      print('Success, the newest Library function worked correctly');
+      print('Success, the Bestseller Library function worked correctly');
     } else {
       print('Failed to retrieve books. Status code: ${response.statusCode}');
     }
@@ -192,6 +192,43 @@ Future<List<dynamic>> loadBestSellers([int page_number = 1]) async {
   }
 }
 
+Future<int> loadTotalPageNumber() async {
+  Response response;
+  SecureStorage userLibraryApiStorage = SecureStorage();
+
+  var responseJSON;
+  int totalPages;
+  var jwtToken = await userLibraryApiStorage.readSecureData('jwt');
+  try {
+    // print(
+    //     '${dotenv
+    //         .env['DB_URL']}/api/books?populate=*&pagination[page]=1&pagination[pageSize]=${numberofbookspersection}&sort[0]=date_added:desc');
+    response = await http.get(
+      Uri.parse(
+          '${dotenv
+              .env['DB_URL']}/api/books?populate=*&pagination[page]=1&pagination[pageSize]=${numberofbookspersection}&sort[0]=date_added:desc'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $jwtToken',
+      },
+    );
+    if (response.statusCode == 200) {
+      responseJSON = json.decode(response.body);
+      totalPages = responseJSON['meta']['pagination']['pageCount'];
+      print(totalPages);
+      return totalPages;
+
+    }
+    else{
+      return 1;
+    }
+  }
+  catch (e) {
+    return 1;
+  }
+}
+
 ////////////////////////////////////////////////////This has to be changed/////////////////////////////////////////////////////////////////
 Future<List<dynamic>> loadTopRated([int page_number = 1]) async {
   List newestLibrary = [];
@@ -200,19 +237,19 @@ Future<List<dynamic>> loadTopRated([int page_number = 1]) async {
 
   var responseJSON;
 
-  var jwtToken = await userLibraryApiStorage.readSecureData('jwt');
-  try {
-    print(
-        '${dotenv.env['DB_URL']}/api/books?populate=*&pagination[page]=${page_number}&pagination[pageSize]=${numberofbookspersection}&sort[0]=date_added:desc');
-    response = await http.get(
-      Uri.parse(
-          '${dotenv.env['DB_URL']}/api/books?populate=*&pagination[page]=${page_number}&pagination[pageSize]=${numberofbookspersection}&sort[0]=date_added:desc'),
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-        'Authorization': 'Bearer $jwtToken',
-      },
-    );
+    var jwtToken = await userLibraryApiStorage.readSecureData('jwt');
+    try {
+      print(
+          '${dotenv.env['DB_URL']}/api/books?populate=*&pagination[page]=${page_number}&pagination[pageSize]=${numberofbookspersection}&sort[0]=date_added:desc');
+      response = await http.get(
+        Uri.parse(
+            '${dotenv.env['DB_URL']}/api/books?populate=*&pagination[page]=${page_number}&pagination[pageSize]=${numberofbookspersection}&sort[0]=date_added:desc'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $jwtToken',
+        },
+      );
 
     if (response.statusCode == 200) {
       responseJSON = json.decode(response.body);
@@ -244,6 +281,8 @@ Future<List<dynamic>> loadTopRated([int page_number = 1]) async {
 void loadSearch(search_value) {
   print('Inside the load Search function executing for value ${search_value}');
 }
+
+
 
 void signUserUpApi(email, password) async {
   try {
