@@ -33,9 +33,14 @@ dependencies:
   firebase_core: ^2.24.0
   flutter:
     sdk: flutter
+  flutter_credit_card: ^2.0.0
   flutter_dotenv: ^5.1.0
   flutter_mailer: ^2.1.1
+  flutter_pdfview: ^1.2.7
+  flutter_secure_storage: ^9.0.0
+  google_fonts: ^6.1.0
   http: ^1.1.0
+  path_provider: ^2.0.7
   smtpd: ^0.2.0
 
 dev_dependencies:
