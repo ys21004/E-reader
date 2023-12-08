@@ -9,6 +9,7 @@ import 'package:ebook_frontend/pages/auth_utils.dart';
 import 'package:ebook_frontend/custom_button.dart';
 import 'package:ebook_frontend/pages/login_page.dart';
 import 'package:ebook_frontend/pages/home_page.dart'; // Import the HomePage class
+import 'package:ebook_frontend/pages/reading_schedule_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -39,7 +40,8 @@ class MyApp extends StatelessWidget {
             ),
         '/login_page': (context) => LoginPage(
               onTap: () {
-                Navigator.pushReplacementNamed(context, '/home_page');
+                Navigator.pushReplacementNamed(
+                    context, '/home_page'); // Updated route to home_page
               },
             ),
         '/verification_page': (context) => VerificationScreenState(

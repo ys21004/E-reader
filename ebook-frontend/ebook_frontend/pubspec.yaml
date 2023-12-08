@@ -42,6 +42,7 @@ dependencies:
   http: ^1.1.0
   path_provider: ^2.0.7
   smtpd: ^0.2.0
+  smooth_star_rating_null_safety: ^1.0.4
 
 dev_dependencies:
   firebase_core: ^2.24.0

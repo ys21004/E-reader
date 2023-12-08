@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:ebook_frontend/components/my_search_bar.dart';
 import 'package:ebook_frontend/components/book_card.dart';
 import 'package:ebook_frontend/components/category_button.dart';
-
+import 'package:ebook_frontend/pages/reading_schedule_page.dart';
 import '../constants/bookcardconstants.dart';
 import '../constants/colorconstants.dart';
 import '../constants/defaults.dart';
@@ -19,7 +19,12 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   String selectedGenre = 'All';
-  List<String> genres = ['All', 'Adventure', 'Fantasy', 'Mystery']; // Add more genres as needed
+  List<String> genres = [
+    'All',
+    'Adventure',
+    'Fantasy',
+    'Mystery'
+  ]; // Add more genres as needed
 
   late Future<dynamic> dynamicSectionFuture;
   SecureStorage userLibraryApiStorage = SecureStorage();
@@ -27,7 +32,8 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    dynamicSectionFuture = loadNewest(); // Set default future to load newest books
+    dynamicSectionFuture =
+        loadNewest(); // Set default future to load newest books
   }
 
   void updateDynamicSection(Future<dynamic> newFuture) {
@@ -56,6 +62,16 @@ class _HomePageState extends State<HomePage> {
         leading: Icon(Icons.menu, color: primaryColor), // Navigation Icon
         actions: [
           Icon(Icons.more_vert, color: primaryColor), // Three dot Icon
+          IconButton(
+            icon: Icon(Icons.schedule), // Add the schedule icon here
+            onPressed: () {
+              // Navigate to ReadingSchedulePage when the icon is pressed
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => ReadingSchedulePage()),
+              );
+            },
+          ),
         ],
         bottom: PreferredSize(
           preferredSize: Size.fromHeight(40),
